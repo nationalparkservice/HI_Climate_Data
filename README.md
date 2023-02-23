@@ -17,3 +17,5 @@ Climate data were provided by Dr. Abby Frazier in 2022. Descriptions of the data
 * Only 1 Cf
 * Rain and T2
 
+- Right now Xue doesn't add anything from Zhang. Try getting daily files from NCAR
+
