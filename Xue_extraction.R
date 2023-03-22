@@ -12,3 +12,4 @@ Xue <- read_ncdf(paste0(DataDir,"hist_mean_rain.nc"))
 nc<-nc_open(paste0(DataDir,"hist_mean_rain.nc"))
 nc$dim
 
+
