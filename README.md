@@ -10,14 +10,6 @@ Climate data were provided by Dr. Abby Frazier in 2022. Descriptions of the data
 * raw nc
 * processed
 * For each island present (1990-2009), rcp45 and 85 (2080-2099)
-  
-# *Xue seasonal attached (dynamical)*
-# * daily available from NCAR
-# * 10-year period in historical and future (pseudo-global warming method)
-# * Only 1 Cf
-# * Rain and T2
-# 
-# - Right now Xue doesn't add anything from Zhang. It's average over whole time periods. Try getting daily files from NCAR to look at extreme precip and temps.
 
 # Data prep scripts
 ## Zhang extraction
