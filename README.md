@@ -22,15 +22,31 @@ Reads in OBS data and converts to RDS files.
   * *Monthly temperature:* Observation-based present day means use the period 1957-1981. For more information, please see the Climate of Hawaii website; Giambelluca et al. 2014; http://climate.geography.hawaii.edu/. Data are in degC
 
   * *Monthly precipitation:* The observation-based present day mean maps use the period 1990-2009. These are calculated from the month-year rainfall maps, Frazier et al. 2016; available at http://rainfall.geography.hawaii.edu. Present-day means are calculated for each season: Annual, Wet Season (Nov-Apr), and Dry Season (May-Oct). Means are converted to different units: Rainfall is converted from mm to inches (divide mm by 25.4).
+  
+Variables created
+  * ANNPrecip_Obs
+  * ANNPrecipDelta_rcp45/85
+  * ANNPrecipBC_rcp45/85...
+    * JanPrecip
+    * FebPrecip
+    * MarPrecip...
+    * WetPrecip
+    * DryPrecip
 
-  * Bias correction is Future delta (from Zhang extraction) (downscaled future - downscaled obs) + Obs data
+Bias correction is Future delta (from Zhang extraction; downscaled future - downscaled obs) + Obs data
 
 ## Variable creation
-Reads in bias-corrected data, calculates RDS files for each variable and ts files for variables to be read into plotting scripts
+Reads in bias-corrected data, calculates ts files for variables to be read into plotting scripts
 
-## SPEI
-Calculates SPEI on base data and calculates SPEI on each grid cell
+## SPI
+Only SPI can be calculated b/c evapotranspiration calculations require more sophisticated methods than what can be done with T and P (Thornthwaite), thus ET cannot be calculated from available projection data. 
 
+  * Calculates SPI on stars objects for Obs and each CF.
+  * Save mean() stars objects for SPI
+  * Reduce ts for each climate zone and whole park
+  * Calculate characteristics for each climate zone
+  * Plot Maps w/ SPI ts for Obs and each CF
+  * Standard panel plot for each zone
 
 # Plotting scripts
 
