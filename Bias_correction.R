@@ -326,25 +326,24 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'DecPreci
 rm(RFpresent,RFRCP45,RFRCP85,present,rcp45,rcp85,BC_rcp45,BC_rcp85,Delta_rcp45,Delta_rcp85,Obs)
 
 
+##################
+### Tmean
 
+Tmeanpresent <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'Tmean.monthly-',scens[1]))
+TmeanRCP45 <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'Tmean.monthly-',scens[2]))
+TmeanRCP85 <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'Tmean.monthly-',scens[3]))
 
-"tair_ann"
-#Extract January data
-
-P<-readRDS(paste0(here::here('data/Output/Data-files//'),'RF.monthly-present'))
-R45<-readRDS(paste0(here::here('data/Output/Data-files//'),'RF.monthly-rcp45'))
-
-#Annual Precip - ANNPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"ANN_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
+#Annual Tmean - ANNTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_ann")); Obs<- setNames(Obs, "TmeanC") #Change input
 st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
 
-present <- st_apply(RFpresent, c("x", "y"), FUN=function(x) mean(x)*12)
-rcp45 <- st_apply(RFRCP45, c("x", "y"), FUN=function(x) mean(x)*12)
-rcp85 <- st_apply(RFRCP85, c("x", "y"), FUN=function(x) mean(x)*12)
+present <- st_apply(Tmeanpresent, c("x", "y"), FUN=function(x) mean(x))
+rcp45 <- st_apply(TmeanRCP45, c("x", "y"), FUN=function(x) mean(x))
+rcp85 <- st_apply(TmeanRCP85, c("x", "y"), FUN=function(x) mean(x))
 
 Obs<- st_warp(Obs, present)
-saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'ANNPrecip-Obs')) #Change this line
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'ANNTmean-Obs')) #Change this line
 
 Delta_rcp45 <- rcp45 - present
 Delta_rcp85 <- rcp85 - present
@@ -352,11 +351,295 @@ Delta_rcp85 <- rcp85 - present
 BC_rcp45 <- Delta_rcp45 + Obs
 BC_rcp85 <- Delta_rcp85 + Obs
 
-saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'ANNPrecipDelta_rcp45'))
-saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'ANNPrecipDelta_rcp85'))
-saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'ANNPrecipBC_rcp45'))
-saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'ANNPrecipBC_rcp85'))
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'ANNTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'ANNTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'ANNTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'ANNTmeanBC_rcp85'))
+
+#Jan Tmean - JanTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_jan")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,1])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,1])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,1])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'JanTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'JanTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'JanTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'JanTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'JanTmeanBC_rcp85'))
 
 
+#Feb Tmean - FebTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_feb")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
 
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,2])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,2])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,2])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'FebTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'FebTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'FebTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'FebTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'FebTmeanBC_rcp85'))
+
+
+#Mar Tmean - MarTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_mar")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,3])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,3])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,3])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'MarTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'MarTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'MarTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'MarTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'MarTmeanBC_rcp85'))
+
+
+#Apr Tmean - AprTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_apr")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,4])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,4])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,4])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'AprTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'AprTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'AprTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'AprTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'AprTmeanBC_rcp85'))
+
+
+#May Tmean - MayTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_may")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,5])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,5])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,5])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'MayTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'MayTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'MayTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'MayTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'MayTmeanBC_rcp85'))
+
+
+#Jun Tmean - JunTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_jun")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,6])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,6])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,6])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'JunTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'JunTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'JunTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'JunTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'JunTmeanBC_rcp85'))
+
+
+#Jul Tmean - JulTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_jul")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,7])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,7])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,7])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'JulTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'JulTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'JulTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'JulTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'JulTmeanBC_rcp85'))
+
+
+#Aug Tmean - AugTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_aug")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,8])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,8])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,8])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'AugTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'AugTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'AugTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'AugTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'AugTmeanBC_rcp85'))
+
+
+#Sep Tmean - SepTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_sep")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,9])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,9])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,9])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'SepTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'SepTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'SepTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'SepTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'SepTmeanBC_rcp85'))
+
+
+#Oct Tmean - OctTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_oct")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,10])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,10])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,10])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'OctTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'OctTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'OctTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'OctTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'OctTmeanBC_rcp85'))
+
+
+#Nov Tmean - NovTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_nov")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,11])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,11])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,11])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'NovTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'NovTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'NovTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'NovTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'NovTmeanBC_rcp85'))
+
+
+#Dec Tmean - DecTmean
+Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_dec")); Obs<- setNames(Obs, "TmeanC") #Change input
+st_crop(Obs,boundary) %>%  
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+
+present <- st_apply(Tmeanpresent[,,,c(monthly.index[,12])],c("x","y"),mean)
+rcp45 <- st_apply(TmeanRCP45[,,,c(monthly.index[,12])],c("x","y"),mean)
+rcp85 <- st_apply(TmeanRCP85[,,,c(monthly.index[,12])],c("x","y"),mean)
+
+Obs<- st_warp(Obs, present)
+saveRDS(Obs, file = paste0(here::here('data/Output/Data-files//'),'DecTmean-Obs')) #Change this line
+
+Delta_rcp45 <- rcp45 - present
+Delta_rcp85 <- rcp85 - present
+
+BC_rcp45 <- Delta_rcp45 + Obs
+BC_rcp85 <- Delta_rcp85 + Obs
+
+saveRDS(Delta_rcp45, file = paste0(here::here('data/Output/Data-files//'),'DecTmeanDelta_rcp45'))
+saveRDS(Delta_rcp85, file = paste0(here::here('data/Output/Data-files//'),'DecTmeanDelta_rcp85'))
+saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'DecTmeanBC_rcp45'))
+saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'DecTmeanBC_rcp85'))
 
