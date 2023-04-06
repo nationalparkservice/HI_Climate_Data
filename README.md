@@ -32,11 +32,13 @@ Variables created
     * MarPrecip...
     * WetPrecip
     * DryPrecip
+  * ANNTmean...
 
 Bias correction is Future delta (from Zhang extraction; downscaled future - downscaled obs) + Obs data
 
 ## Variable creation
 Reads in bias-corrected data, calculates ts files for variables to be read into plotting scripts
+  * Output: Zone-Monthly-data.csv
 
 ## SPI
 Only SPI can be calculated b/c evapotranspiration calculations require more sophisticated methods than what can be done with T and P (Thornthwaite), thus ET cannot be calculated from available projection data. 
@@ -53,7 +55,6 @@ Only SPI can be calculated b/c evapotranspiration calculations require more soph
 ## Maps_ts_plots.R
 Plots map of whole park for each CF with ts plot that is average of the park.
 Input data are Mean RDS for whole park and annual timeseries
-- Would it make more sense to do RDS that's annual means for whole park and in script can extract the ts?
   * Annual Tmean
   * Annual Precip
 
