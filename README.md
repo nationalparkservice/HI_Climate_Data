@@ -53,6 +53,8 @@ Reads in bias-corrected data, calculates ts files for variables to be read into 
 _....R_
 Only SPI can be calculated b/c evapotranspiration calculations require more sophisticated methods than what can be done with T and P (Thornthwaite), thus ET cannot be calculated from available projection data. 
 
+Uses raw Zhang and Obs data, from Z drive because easiest to calculate on raster stack, rather than stars objects.
+
   * Calculates SPI on stars objects for Obs and each CF.
   * Save mean() stars objects for SPI
   * Reduce ts for each climate zone and whole park
