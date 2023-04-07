@@ -13,15 +13,18 @@ Climate data were provided by Dr. Abby Frazier in 2022. Descriptions of the data
 
 # Data prep scripts
 ## Zhang extraction
-_Zhang_extraction.R_
+*_Zhang_extraction.R_*
+
 Extracts Zhang data and puts into RDS files. Requires external HD with Zhang files to run. Output goes to local park file.
 
 ## Summarize rainfall observations
-_Mean_Rainfall_Obs.R_
+*_Mean_Rainfall_Obs.R_*
+
 Takes data from Rainfall.Atlas and summarizes by year and month for bias correction process. Output is geoTIFF files to be read in to BC script
 
 ## Bias correction
-_Bias_correction.R_
+*_Bias_correction.R_*
+
 Reads in OBS data and converts to RDS files. Obs data stored on external HD and output goes to local park file.
   * *Monthly temperature:* Observation-based present day means use the period 1957-1981. For more information, please see the Climate of Hawaii website; Giambelluca et al. 2014; http://climate.geography.hawaii.edu/. Data are in degC
 
@@ -45,12 +48,14 @@ Wet/Dry season BC for plots
     * Precip is mean delta of each month
 
 ## Variable creation
-_Variable_creation.R_
+*_Variable_creation.R_*
+
 Reads in bias-corrected data, calculates ts files for variables to be read into plotting scripts
   * Output: Zone-Monthly-data.csv (Output are in Inches and Fahreneit)
 
 ## SPI
-_....R_
+*_SPI_analysis.R_*
+
 Only SPI can be calculated b/c evapotranspiration calculations require more sophisticated methods than what can be done with T and P (Thornthwaite), thus ET cannot be calculated from available projection data. 
 
 Uses raw Zhang and Obs data, from Z drive because easiest to calculate on raster stack, rather than stars objects.
@@ -65,7 +70,8 @@ Uses raw Zhang and Obs data, from Z drive because easiest to calculate on raster
 # Plotting scripts
 
 ## Delta maps for whole park with ts avg of park
-_Maps_ts_plots.R_
+*_Maps_ts_plots.R_*
+
 Plots map of whole park for each CF with ts plot that is average of the park.
 Input data are Mean RDS for whole park and annual timeseries
   * Annual Tmean (ANNTmean)
@@ -73,7 +79,8 @@ Input data are Mean RDS for whole park and annual timeseries
   * Wet/Dry Tmean/Precip (WetTmean) (DryPrecip)
 
 ## Wet/Dry seaonal maps and dotplots by zone
-_Maps_seasonal_dotplots.R_
+*_Maps_seasonal_dotplots.R_*
+
   * Tmean and Precip 
   
   
