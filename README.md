@@ -77,6 +77,8 @@ Input data are Mean RDS for whole park and annual timeseries
   * Annual Tmean (ANNTmean)
   * Annual Precip (ANNPrecip)
   * Wet/Dry Tmean/Precip (WetTmean) (DryPrecip)
+  
+  Topo clipped to HALE boundary. 100m Natural Earth from https://earthworks.stanford.edu/catalog/stanford-qd855xh2430
 
 ## Wet/Dry seaonal maps and dotplots by zone
 ***Maps_seasonal_dotplots.R***
