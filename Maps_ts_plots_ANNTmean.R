@@ -56,7 +56,7 @@ DF$period = factor(ifelse(DF$Year<"2010-01-01","Past","Future"),levels=c("Past",
       geom_raster(data = topo_df ,aes(x = x, y = y,alpha=HALENatEa1_1), show.legend=FALSE) +
       geom_stars(data = data, alpha = 0.8) + 
       geom_sf(data = boundary, aes(), fill = NA) +
-      scale_fill_viridis(direction=-1, option = scale, limits = c(scale.min, scale.max),  
+      scale_fill_viridis(direction=1, option = scale, limits = c(scale.min, scale.max),  
                          guide = guide_colorbar(title.position = "top", title.hjust = 0.5),oob = scales::squish) + #mako for WB delta
       labs(title = title) +
       theme_map() +
