@@ -1,3 +1,20 @@
+library(tidyr)
+library(dplyr)
+library(stars)
+library(raster)
+library(here)
+library(ggplot2)
+library(ggthemes)
+library(zoo)
+library(viridis)
+library(ggbreak)
+library(lemon)
+library(ggpubr);library(gridExtra);library(grid);library(gtable)
+
+rm(list=ls())
+
+data.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Data-files/"
+plot.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Plots/"
 var = "precipIn"
 long.title = "total precipitation (in/season)" 
 delta.var = "pcp"

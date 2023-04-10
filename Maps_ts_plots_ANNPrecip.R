@@ -32,6 +32,10 @@ long.title = "total precipitation (in/year)" #change to be legend
 delta.var = "PrecipIn"
 scale="viridis"
 
+# insert topo
+topo <- stack('./data/HALE/HALENatEa1.tif')
+topo_df  <- as.data.frame(topo, xy = TRUE) 
+
 # Generate sample data for ts plot
 df = read.csv(paste0(data.dir,"RF.monthly.HALE.csv")) %>% mutate(PrecipIn = Rainfall_mm/25.4)
 df = merge(df, CF_GCM,by="scen",all=TRUE)
@@ -51,6 +55,7 @@ DF$period = factor(ifelse(DF$Year<"2010-01-01","Past","Future"),levels=c("Past",
   # ggplot
   map.plot <- function(data, title,xaxis,metric,col){
     ggplot() + 
+      geom_raster(data = topo_df ,aes(x = x, y = y,alpha=HALENatEa1_1), show.legend=FALSE) +
       geom_stars(data = data, alpha = 0.8) + 
       geom_sf(data = boundary, aes(), fill = NA) +
       scale_fill_viridis(direction=-1, option = scale, limits = c(scale.min, scale.max),  
@@ -114,6 +119,6 @@ DF$period = factor(ifelse(DF$Year<"2010-01-01","Past","Future"),levels=c("Past",
   g
   
 
-  ggsave(paste0(var,"_ANN.png"), width = 15, height = 9, path = plot.dir)
+  ggsave(paste0(var,"_ANN.png"), width = 20, height = 9, path = plot.dir)
   
   
