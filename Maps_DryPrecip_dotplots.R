@@ -17,9 +17,9 @@ data.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output
 plot.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Plots/"
 
 #ANNPrecip -- load .rds files
-CF1.rds <- readRDS(paste0(data.dir,"WetPrecipDelta_rcp45")) %>%  #change var name
+CF1.rds <- readRDS(paste0(data.dir,"DryPrecipDelta_rcp45")) %>%  #change var name
   mutate(pcp.in = mean /25.4) #%>% extract(pcp.in) 
-CF2.rds <- readRDS(paste0(data.dir,"WetPrecipDelta_rcp85")) %>%  #change var name
+CF2.rds <- readRDS(paste0(data.dir,"DryPrecipDelta_rcp85")) %>%  #change var name
   mutate(pcp.in = mean /25.4)# %>% #select(pcp.in) 
 
 boundary <-boundary <- st_read('./data/HALE/HALE_Ecoregions_Split.shp')
@@ -28,10 +28,10 @@ CF_GCM <- data.frame(CF=c("Climate Future 1", "Climate Future 2"), scen=c("rcp45
 cols <- c("#9A9EE5","#E10720")
 
 var = "PrecipIn" #change to name of var in df
-long.title = "average wet-season precipitation (in/month)" #change to be legend
+long.title = "average dry-season precipitation (in/month)" #change to be legend
 delta.var<- "PrecipIn"
 scale="viridis"
-seas="wet"
+seas="dry"
 
 # insert topo
 topo <- stack('./data/HALE/HALENatEa1.tif')
@@ -40,6 +40,8 @@ topo_df  <- as.data.frame(topo, xy = TRUE)
 # Generate sample data for ts plot
 df = read.csv(paste0(plot.dir,"Seasonal-delta.csv")) 
 df = subset(df, season == seas & CF!="Recent")
+
+df.future %>% group_by(CF) %>% mutate(diff = PrecipIn - df.present$PrecipIn) ->df.future
 
 scale.min = min(c(CF1.rds$pcp.in, CF2.rds$pcp.in),na.rm=TRUE) #change names
 scale.max = max(c(CF1.rds$pcp.in, CF2.rds$pcp.in),na.rm=TRUE) #change names
