@@ -657,7 +657,7 @@ Feb<-readRDS(paste0(data.dir,"FebPrecipDelta_rcp45"))
 Mar<-readRDS(paste0(data.dir,"MarPrecipDelta_rcp45"))
 Apr<-readRDS(paste0(data.dir,"AprPrecipDelta_rcp45"))
 
-wet.pr<-(Oct+Nov+Dec+Jan+Feb+Mar+Apr)/6 #Avg Wet season delta
+wet.pr<-(Nov+Dec+Jan+Feb+Mar+Apr)/6 #Avg Wet season delta
 saveRDS(wet.pr, file = paste0(here::here('data/Output/Data-files//'),'WetPrecipDelta_rcp45'))
 
 ## Dry Precip rcp45
@@ -679,7 +679,7 @@ Feb<-readRDS(paste0(data.dir,"FebPrecipDelta_rcp85"))
 Mar<-readRDS(paste0(data.dir,"MarPrecipDelta_rcp85"))
 Apr<-readRDS(paste0(data.dir,"AprPrecipDelta_rcp85"))
 
-wet.pr<-(Oct+Nov+Dec+Jan+Feb+Mar+Apr)/6 #Avg Wet season delta
+wet.pr<-(Nov+Dec+Jan+Feb+Mar+Apr)/6 #Avg Wet season delta
 saveRDS(wet.pr, file = paste0(here::here('data/Output/Data-files//'),'WetPrecipDelta_rcp85'))
 
 ## Dry Precip rcp85
@@ -701,8 +701,8 @@ Feb<-readRDS(paste0(data.dir,"FebTmeanDelta_rcp45"))
 Mar<-readRDS(paste0(data.dir,"MarTmeanDelta_rcp45"))
 Apr<-readRDS(paste0(data.dir,"AprTmeanDelta_rcp45"))
 
-wet.tmean<-(Oct+Nov+Dec+Jan+Feb+Mar+Apr)/6 #Avg Wet season delta
-saveRDS(wet.pr, file = paste0(here::here('data/Output/Data-files//'),'WetTmeanDelta_rcp45'))
+wet.tmean<-(Nov+Dec+Jan+Feb+Mar+Apr)/6 #Avg Wet season delta
+saveRDS(wet.tmean, file = paste0(here::here('data/Output/Data-files//'),'WetTmeanDelta_rcp45'))
 
 ## Dry Tmean rcp45
 May<-readRDS(paste0(data.dir,"MayTmeanDelta_rcp45")) 
@@ -713,7 +713,7 @@ Sep<-readRDS(paste0(data.dir,"SepTmeanDelta_rcp45"))
 Oct<-readRDS(paste0(data.dir,"OctTmeanDelta_rcp45")) 
 
 dry.tmean<-(May+Jun+Jul+Aug+Sep+Oct)/6 #Avg Wet season delta
-saveRDS(dry.pr, file = paste0(here::here('data/Output/Data-files//'),'DryTmeanDelta_rcp45'))
+saveRDS(dry.tmean, file = paste0(here::here('data/Output/Data-files//'),'DryTmeanDelta_rcp45'))
 
 ## Wet Tmean rcp85
 Nov<- readRDS(paste0(data.dir,"NovTmeanDelta_rcp85"))
@@ -723,8 +723,8 @@ Feb<-readRDS(paste0(data.dir,"FebTmeanDelta_rcp85"))
 Mar<-readRDS(paste0(data.dir,"MarTmeanDelta_rcp85"))
 Apr<-readRDS(paste0(data.dir,"AprTmeanDelta_rcp85"))
 
-wet.tmean<-(Oct+Nov+Dec+Jan+Feb+Mar+Apr)/6 #Avg Wet season delta
-saveRDS(wet.pr, file = paste0(here::here('data/Output/Data-files//'),'WetTmeanDelta_rcp85'))
+wet.tmean<-(Nov+Dec+Jan+Feb+Mar+Apr)/6 #Avg Wet season delta
+saveRDS(wet.tmean, file = paste0(here::here('data/Output/Data-files//'),'WetTmeanDelta_rcp85'))
 
 ## Dry Tmean rcp85
 May<-readRDS(paste0(data.dir,"MayTmeanDelta_rcp85")) 
@@ -735,6 +735,6 @@ Sep<-readRDS(paste0(data.dir,"SepTmeanDelta_rcp85"))
 Oct<-readRDS(paste0(data.dir,"OctTmeanDelta_rcp85")) 
 
 dry.tmean<-(May+Jun+Jul+Aug+Sep+Oct)/6 #Avg Wet season delta
-saveRDS(dry.pr, file = paste0(here::here('data/Output/Data-files//'),'DryTmeanDelta_rcp85'))
+saveRDS(dry.tmean, file = paste0(here::here('data/Output/Data-files//'),'DryTmeanDelta_rcp85'))
 
 
