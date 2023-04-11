@@ -41,8 +41,6 @@ topo_df  <- as.data.frame(topo, xy = TRUE)
 df = read.csv(paste0(plot.dir,"Seasonal-delta.csv")) 
 df = subset(df, season == seas & CF!="Recent")
 
-df.future %>% group_by(CF) %>% mutate(diff = PrecipIn - df.present$PrecipIn) ->df.future
-
 scale.min = min(c(CF1.rds$pcp.in, CF2.rds$pcp.in),na.rm=TRUE) #change names
 scale.max = max(c(CF1.rds$pcp.in, CF2.rds$pcp.in),na.rm=TRUE) #change names
 
@@ -106,4 +104,4 @@ g <- grid.arrange(maps, dotplot,ncol = 2, widths = c(6, 4), clip = FALSE)
 annotate_figure(g, top = text_grob(paste0("Change in seasonal ",long.title, "; 1990-2009 vs 2080-2099"), 
                                    face = "bold", size = 20))
 
-ggsave(paste0(season,"_season_",var,".png"), width = 15, height = 9, path = plot.dir,bg="white")
+ggsave(paste0(seas,"_season_",var,".png"), width = 15, height = 9, path = plot.dir,bg="white")
