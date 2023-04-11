@@ -20,13 +20,13 @@ pcpdf <- data.frame()
 tmndf <- data.frame()
 for (i in 1:length(scens)){
     RF <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'RF.monthly-',scens[i])) %>% 
-      mutate(PrecipIn = Rainfall_mm/25.4) %>% select(PrecipIn) 
+      mutate(PrecipIn = Rainfall_mm/25.4) #%>% select(PrecipIn) 
     Tmean<- readRDS(file = paste0(here::here('data/Output/Data-files//'),'Tmean.monthly-',scens[i]))
    
      for(j in 1:length(climate_zones)){
       zones1 <-  zones %>% filter(Short_Name == climate_zones[j]) #subset zone
       RF1 <- st_crop(RF,zones1) #crop RF and Tmean to zone
-      Tmean1 <- st_crop(Tmean,zones)
+      Tmean1 <- st_crop(Tmean,zones1)
       
       #summarize RF and Tmean by time
       pcp.time <- st_apply((RF1 %>% dplyr::select(PrecipIn)), c("date"),mean,na.rm=TRUE, rename=FALSE)
