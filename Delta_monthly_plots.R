@@ -70,6 +70,8 @@ monthly.future.delta <- rbind(monthly.future1,monthly.future2)
 
 write.csv(monthly.future.delta,file=paste0(plot.dir,"Monthly-delta.csv"),row.names=F)
 
+monthly.future.delta <- read.csv(paste0(plot.dir,"Monthly-delta.csv"))
+
 PlotTheme = theme(axis.text=element_text(size=14),    #Text size for axis tick mark labels
                   axis.title.x=element_blank(),               #Text size and alignment for x-axis label
                   axis.title.y=element_text(size=18, vjust=0.5,  margin=margin(t=20, r=20, b=20, l=20)),              #Text size and alignment for y-axis label
@@ -115,7 +117,7 @@ ggsave("Monthly.precip.bar.png", width = 15, height = 9, path = plot.dir)
 
 
 Month_line_plot(monthly.future.delta,xvar=Month,yvar=DeltaTmean,grp=CF,cols=cols,
-               title="Change in avg daily temperature \nin 2090 vs 2000",
+               title="Change in avg monthly temperature \nin 2090 vs 2000",
                xlab = "Monthly", ylab="Change in temperature (\u00B0F)")
 
 ggsave("Monthly.tmean.bar.png", width = 15, height = 9, path = plot.dir)
