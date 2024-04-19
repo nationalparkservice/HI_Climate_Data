@@ -4,7 +4,7 @@ library(dplyr)
 rm(list=ls())
 
 monthly.index<-read.csv(paste0(here::here('data/Monthly_indexing.csv')))
-Obs.RF.dir <- "D:/HI_Data/OBS/RFMonthYr_Rasters_Ma_in_1920_2012/Month_Rasters_Ma_in/"
+Obs.RF.dir <- "D:/HI_Data/OBS/StateRFGrids_mm/"
 Obs.Tmean.dir <- "D:/HI_Data/OBS/Tair_month_raster/"
 
 scens<-c("present","rcp45","rcp85")
@@ -12,13 +12,18 @@ RFpresent <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'RF.mo
 RFRCP45 <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'RF.monthly-',scens[2]))
 RFRCP85 <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'RF.monthly-',scens[3]))
 
-boundary <- st_read('./data/HALE/HALE_boundary.shp')
+# boundary <- st_read('./data/HALE/HALE_boundary.shp')
+boundary <- st_read("C:/Users/arunyon/OneDrive - DOI/Documents/GIS/HAVO_Kilauea_Summit_Wet_Dry_Zones/HAVO_Kilauea_Summit_Wet_Dry_Zones.shp")
 boundary <- st_transform(boundary, st_crs(RFpresent))
 
 #Annual Precip - ANNPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"ANN_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mmann")) ; Obs<- setNames(Obs, "mean") #Units in mm -- same as projections; #Change input to match projections
+Obs <- st_crop(Obs,boundary)
+
+# # Code from HALE -- to change names and units -- not needed for state raster, b/c in mm
+# Obs<- setNames(Obs, "inch") #Change input
+# st_crop(Obs,boundary) %>%  
+#   mutate(mean = inch*25.4) %>% select(mean) -> Obs
 
 present <- st_apply(RFpresent, c("x", "y"), FUN=function(x) mean(x)*12)
 rcp45 <- st_apply(RFRCP45, c("x", "y"), FUN=function(x) mean(x)*12)
@@ -39,9 +44,8 @@ saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'ANNPreci
 saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'ANNPrecipBC_rcp85'))
 
 #Jan Precip - JanPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"JAN_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm01")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,1])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,1])],c("x","y"),mean)
@@ -62,9 +66,8 @@ saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'JanPreci
 saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'JanPrecipBC_rcp85'))
 
 #Feb Precip - FebPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"FEB_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm02")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,2])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,2])],c("x","y"),mean)
@@ -85,9 +88,8 @@ saveRDS(BC_rcp45, file = paste0(here::here('data/Output/Data-files//'),'FebPreci
 saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'FebPrecipBC_rcp85'))
 
 #Mar Precip - MarPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"MAR_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm03")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,3])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,3])],c("x","y"),mean)
@@ -109,9 +111,8 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'MarPreci
 
 
 #Apr Precip - AprPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"APR_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm04")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,4])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,4])],c("x","y"),mean)
@@ -133,9 +134,8 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'AprPreci
 
 
 #May Precip - MayPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"MAY_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm05")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,5])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,5])],c("x","y"),mean)
@@ -157,9 +157,8 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'MayPreci
 
 
 #Jun Precip - JunPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"JUN_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm06")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,6])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,6])],c("x","y"),mean)
@@ -181,9 +180,8 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'JunPreci
 
 
 #Jul Precip - JulPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"JUL_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm07")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,7])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,7])],c("x","y"),mean)
@@ -205,9 +203,8 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'JulPreci
 
 
 #Aug Precip - AugPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"AUG_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm08")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,8])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,8])],c("x","y"),mean)
@@ -229,9 +226,8 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'AugPreci
 
 
 #Sep Precip - SepPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"SEP_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm09")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,9])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,9])],c("x","y"),mean)
@@ -253,9 +249,8 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'SepPreci
 
 
 #Oct Precip - OctPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"OCT_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm10")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,10])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,10])],c("x","y"),mean)
@@ -277,9 +272,8 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'OctPreci
 
 
 #Nov Precip - NovPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"NOV_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm11")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,11])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,11])],c("x","y"),mean)
@@ -301,9 +295,8 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'NovPreci
 
 
 #Dec Precip - DecPrecip
-Obs <- read_stars(paste0(Obs.RF.dir,"DEC_mean_1990-2009.tif")); Obs<- setNames(Obs, "inch") #Change input
-st_crop(Obs,boundary) %>%  
-  mutate(mean = inch*25.4) %>% select(mean) -> Obs
+Obs <- read_stars(paste0(Obs.RF.dir,"staterf_mm12")) ; Obs<- setNames(Obs, "mean") 
+Obs <- st_crop(Obs,boundary)
 
 present <- st_apply(RFpresent[,,,c(monthly.index[,12])],c("x","y"),mean)
 rcp45 <- st_apply(RFRCP45[,,,c(monthly.index[,12])],c("x","y"),mean)
@@ -336,7 +329,7 @@ TmeanRCP85 <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'Tmea
 #Annual Tmean - ANNTmean
 Obs <- read_stars(paste0(Obs.Tmean.dir,"tair_ann")); Obs<- setNames(Obs, "TmeanC") #Change input
 st_crop(Obs,boundary) %>%  
-  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs
+  mutate(TmeanF = (TmeanC*9/5)+32) %>% select(TmeanF) -> Obs # projections in TmeanF
 
 present <- st_apply(Tmeanpresent, c("x", "y"), FUN=function(x) mean(x))
 rcp45 <- st_apply(TmeanRCP45, c("x", "y"), FUN=function(x) mean(x))
@@ -647,7 +640,7 @@ saveRDS(BC_rcp85, file = paste0(here::here('data/Output/Data-files//'),'DecTmean
 ## Wet/Dry season delta maps
 #Wet: Oct-Apr
 #Dry: May-Sep
-data.dir<-"C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Data-files/"
+data.dir<-"C:/Users/arunyon/3D Objects/Local-files/Git-repos/HI_Climate_Data/data/Output/Data-files/"
 
 ## Wet Precip rcp45
 Nov<- readRDS(paste0(data.dir,"NovPrecipDelta_rcp45"))
