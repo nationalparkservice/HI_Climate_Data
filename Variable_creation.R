@@ -12,9 +12,10 @@ TmeanRCP45 <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'Tmea
 TmeanRCP85 <- readRDS(file = paste0(here::here('data/Output/Data-files//'),'Tmean.monthly-',scens[3]))
 
 # For each climate zone extract monthly ts
-zones <- st_read('./data/HALE/HALE_Ecoregions_Split.shp')
+zones <- st_read('C:/Users/arunyon/OneDrive - DOI/Documents/GIS/HAVO_Kilauea_Summit_Wet_Dry_Zones/HAVO_Kilauea_Summit_Wet_Dry_Zones.shp')
 zones <- st_transform(zones, st_crs(RFpresent))
-climate_zones <- zones$Short_Name
+# climate_zones <- zones$Short_Name
+climate_zones <- zones$Label
 
 pcpdf <- data.frame()
 tmndf <- data.frame()
@@ -24,7 +25,7 @@ for (i in 1:length(scens)){
     Tmean<- readRDS(file = paste0(here::here('data/Output/Data-files//'),'Tmean.monthly-',scens[i]))
    
      for(j in 1:length(climate_zones)){
-      zones1 <-  zones %>% filter(Short_Name == climate_zones[j]) #subset zone
+      zones1 <-  zones %>% filter(Label == climate_zones[j]) #subset zone
       RF1 <- st_crop(RF,zones1) #crop RF and Tmean to zone
       Tmean1 <- st_crop(Tmean,zones1)
       

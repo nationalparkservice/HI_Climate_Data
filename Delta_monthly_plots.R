@@ -13,8 +13,8 @@ library(ggpubr);library(gridExtra);library(grid);library(gtable)
 
 rm(list=ls())
 
-data.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Data-files/"
-plot.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Plots/"
+data.dir <- here::here('data/Output/Data-files//')
+plot.dir <- here::here('data/Output//Plots//')
 
 CF_GCM <- data.frame(CF=c("Climate Future 1", "Climate Future 2"), scen=c("rcp45","rcp85"))
 cols <- c("#9A9EE5","#E10720")

@@ -12,8 +12,10 @@ library(SPEI)
 library(viridis)
 rm(list=ls())
 
+OutDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/HAVO_data"
 tif <- read_stars("D:/HI_Data/Zhang/Processed/HI_Downscaling_Share/DynDS_RainfallTIF_AllFolders/DynDS_6MonthlyTIF_State_250m/rcp85/State_RF_rcp85_2080_01_250m.tif",along=band)
-boundary <- st_read('./data/HALE/HALE_boundary.shp')
+# boundary <- st_read('./data/HALE/HALE_boundary.shp')
+boundary <- st_read('C:/Users/arunyon/OneDrive - DOI/Documents/GIS/HAVO_Kilauea_Summit_Wet_Dry_Zones/HAVO_Kilauea_Summit_Wet_Dry_Zones.shp')
 boundary <- st_transform(boundary, st_crs(tif))
 rm(tif)
 
@@ -62,7 +64,7 @@ df1$scen=scens[i]
 df<-rbind(df,df1)
 rm(df1)
 }
-write.csv(df, file=paste0(here::here('data/Output/Data-files//'),'RF.monthly.HALE.csv'))
+write.csv(df, file=paste0(here::here('data/Output/Data-files//'),'RF.monthly.csv'))
 
 
 ## Monthly Temperature

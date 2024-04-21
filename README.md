@@ -18,9 +18,11 @@ Climate data were provided by Dr. Abby Frazier in 2022. Descriptions of the data
 Extracts Zhang data and puts into RDS files. Requires external HD with Zhang files to run. Output goes to local park file.
 
 ## Summarize rainfall observations
-***Mean_Rainfall_Obs.R***
+***Mean_Rainfall_Obs.R*** -- Don't have to run again --
 
-Takes data from Rainfall.Atlas and summarizes by year and month for bias correction process. Output is geoTIFF files to be read in to BC script
+Takes data from Rainfall.Atlas and summarizes by year and month for bias correction process. Output is geoTIFF files to be read in to BC script. 
+
+Output are 1990-2009 tifts in RFMonthYr_Rasters_State_mm_1920_2012 folder
 
 ## Bias correction
 ***Bias_correction.R***
@@ -52,6 +54,7 @@ Wet/Dry season BC for plots
 
 Reads in bias-corrected data, calculates ts files for variables to be read into plotting scripts
   * Output: Zone-Monthly-data.csv (Output are in Inches and Fahreneit)
+  
 
 ## SPI
 ***SPI_analysis.R***
@@ -81,14 +84,15 @@ Plots map of whole park for each CF with ts plot that is average of the park.
 Input data are Mean RDS for whole park and annual timeseries
   * Annual Tmean (ANNTmean)
   * Annual Precip (ANNPrecip)
-  * Wet/Dry Tmean/Precip (WetTmean) (DryPrecip)
+
   
   Topo clipped to HALE boundary. 100m Natural Earth from https://earthworks.stanford.edu/catalog/stanford-qd855xh2430
 
 ## Wet/Dry seaonal maps and dotplots by zone
 ***Maps_seasonal_dotplots.R***
 
-  * Tmean and Precip 
+  * Delta_monthly_plots to get seasonal delta csv
+  * Wet/Dry Tmean/Precip (WetTmean) (DryPrecip)
   
   
 

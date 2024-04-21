@@ -13,14 +13,14 @@ library(ggpubr);library(gridExtra);library(grid);library(gtable)
 
 rm(list=ls())
 
-data.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Data-files/"
-plot.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Plots/"
+data.dir <- here::here('data/Output/Data-files//')
+plot.dir <- here::here('data/Output//Plots//')
 
 #ANNPrecip -- load .rds files
 CF1.rds <- readRDS(paste0(data.dir,"WetTmeanDelta_rcp45")) 
 CF2.rds <- readRDS(paste0(data.dir,"WetTmeanDelta_rcp85")) 
 
-boundary <-boundary <- st_read('./data/HALE/HALE_Ecoregions_Split.shp')
+boundary <-st_read('C:/Users/arunyon/OneDrive - DOI/Documents/GIS/HAVO_Kilauea_Summit_Wet_Dry_Zones/HAVO_Kilauea_Summit_Wet_Dry_Zones.shp')
 boundary <- st_transform(boundary, st_crs(CF1.rds))
 CF_GCM <- data.frame(CF=c("Climate Future 1", "Climate Future 2"), scen=c("rcp45","rcp85"))
 cols <- c("#9A9EE5","#E10720")
@@ -32,7 +32,7 @@ scale="inferno"
 seas="dry"
 
 # insert topo
-topo <- stack('./data/HALE/HALENatEa1.tif')
+topo <- stack('./data/data/topo.tif')
 topo_df  <- as.data.frame(topo, xy = TRUE) 
 
 # Generate sample data for ts plot
@@ -47,7 +47,7 @@ scale.max = max(c(CF1.rds$mean, CF2.rds$mean),na.rm=TRUE) #change names
 # ggplot
 map.plot <- function(data, title,xaxis,metric,col){
   ggplot() +
-    geom_raster(data = topo_df ,aes(x = x, y = y,alpha=HALENatEa1_1), show.legend=FALSE) +
+    geom_raster(data = topo_df ,aes(x = x, y = y,alpha=topo_1), show.legend=FALSE) +
     geom_stars(data = data, alpha = 0.8) + 
     geom_sf(data = boundary, aes(), fill = NA,colour="black") + 
     scale_fill_viridis(direction=1, option = scale, 
@@ -98,7 +98,7 @@ dotplot <- ggplot(df, aes(x=Tmean.delta,y=zone,fill=CF)) +
   scale_y_discrete(limits=rev)
 dotplot
 
-g <- grid.arrange(maps, dotplot,ncol = 2, widths = c(6, 4), clip = FALSE)
+g <- grid.arrange(maps, dotplot,ncol = 2, widths = c(4, 4), clip = FALSE)
 
 annotate_figure(g, top = text_grob(paste0("Change in seasonal ",long.title, "; 1990-2009 vs 2080-2099"), 
                                    face = "bold", size = 20))

@@ -14,172 +14,183 @@ library(viridis)
 library(lemon);library(ggpubr);library(gridExtra);library(grid);library(gtable)
 rm(list=ls())
 
-data.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Data-files/"
-plot.dir <- "C:/Users/achildress/Documents/Git-repos/HI_Climate_Data/data/Output/Plots/"
+data.dir <- here::here('data/Output/Data-files/')
+plot.dir <- here::here('data/Output//Plots/')
 
 Monthly_dir_RF<-"D:/HI_Data/Zhang/Processed/HI_Downscaling_Share/DynDS_RainfallTIF_AllFolders/DynDS_6MonthlyTIF_State_250m/"
 scens<-c("present","rcp45","rcp85")
 
-tif <- read_stars("./data/HALE/tif.tif",along=band)
-boundary <- st_read('./data/HALE/HALE_boundary.shp')
+tif <- read_stars("./data/tif.tif",along=band)
+
+# boundary <- st_read('./data/HALE/HALE_boundary.shp')
+nps_boundary <- st_read('./data/nps_boundary/nps_boundary.shp')
+boundary <- filter(nps_boundary, UNIT_CODE == "HAVO")
 boundary <- st_transform(boundary, st_crs(tif))
 
 
-zones <- st_read('./data/HALE/HALE_Ecoregions_Split.shp')
+zones <- st_read('C:/Users/arunyon/OneDrive - DOI/Documents/GIS/HAVO_Kilauea_Summit_Wet_Dry_Zones/HAVO_Kilauea_Summit_Wet_Dry_Zones.shp')
 zones <- st_transform(zones, st_crs(tif))
-climate_zones <- zones$Short_Name
+climate_zones <- zones$Label
 rm(tif)
 
 cols <- c("#9A9EE5","#E10720")
 
-# ### SPI calcululations *Longman et al. cannot calculate PET in HI with these data
+### SPI calcululations *Longman et al. cannot calculate PET in HI with these data
 # Commented out after .rds files saved
-#   file.list = list.files(path = paste0(Monthly_dir_RF,scens[1],"/"), pattern = '.tif', full.names = TRUE)
-#   RF_stack<-stack(file.list) # Read in as stack - cldn't fig out how to do calc on stars obj.
-#   cropstack<- crop(RF_stack, boundary) #crop to boundary
-#   cropstack<-stack(cropstack)
-#   
-#   dates<-as.Date(paste0(gsub("_","-",str_extract(file.list,"\\d{4}[_]\\d{2}")),"-01"),format="%Y-%m-%d")
-#   cropstack <- setZ(cropstack, dates)
-#   names(cropstack) <- as.yearmon(getZ(cropstack)) #zoo package
-#   
-#   r.mat <- as.matrix(cropstack)
-#   
-#   # Run spei()
-#   funSPImat <- function(x, sc, start, end, na.rm=TRUE,...) {
-#     dat <- ts(x, start = c(1990, 1), end = c(2009, 12), frequency = 12) #need to set dates of object. Could automate but not worth it now
-#     as.numeric((spi(dat, sc, ref.start = start, ref.end = end, na.rm=na.rm, ...))$fitted) 
-#   }
-#   
-#   fitted.mat <- t(apply(r.mat, 1, funSPImat, sc = 6, start = c(1990, 1), #dates of object again
-#                         end = c(2009, 12)))
-#   
-#   # Convert back to raster brick
-#   spi <- setValues(cropstack, fitted.mat)
-#   dates <- as.yearmon(getZ(cropstack))
-#   names(spi) <- as.yearmon(dates)
-#   
-#   spi.stars<-st_as_stars(spi) #convert back to stars
-#   spi.stars1<-st_crop(spi.stars,boundary) #crop to boundary
-#   spi.stars1 <- setNames(spi.stars1,"SPI-6")
-#   saveRDS(spi.stars1, file = paste0(data.dir,'SPI.monthly-',scens[1]))
-#   
-#   h.cropstack <- cropstack
-#   
-#   rm(spi.stars,spi.stars1,spi,cropstack,RF_stack)
-# 
-# 
-# for (i in 2:length(scens)){
-#   file.list = list.files(path = paste0(Monthly_dir_RF,scens[i],"/"), pattern = '.tif', full.names = TRUE)
-#   RF_stack<-stack(file.list) # Read in as stack - cldn't fig out how to do calc on stars obj.
-#   cropstack<- crop(RF_stack, boundary) #crop to boundary
-#   cropstack<-stack(h.cropstack,cropstack)
-#   
-#   h.dates <- as.Date(seq(as.Date("2060-01-01"), as.Date("2079-12-01"), by="months"))
-#   dates<-as.Date(paste0(gsub("_","-",str_extract(file.list,"\\d{4}[_]\\d{2}")),"-01"),format="%Y-%m-%d")
-#   dates<-c(h.dates,dates)
-#   cropstack <- setZ(cropstack, dates)
-#   names(cropstack) <- as.yearmon(getZ(cropstack)) #zoo package
-#   
-#   r.mat <- as.matrix(cropstack)
-#   
-#   # Run spei()
-#   funSPImat <- function(x, sc, start, end, na.rm=TRUE,...) {
-#     dat <- ts(x, start = c(2060, 1), end = c(2099, 12), frequency = 12) #need to set dates of object. Could automate but not worth it now
-#     as.numeric((spi(dat, sc, ref.start = start, ref.end = c(2079,12), na.rm=na.rm, ...))$fitted) 
-#   }
-#   
-#   fitted.mat <- t(apply(r.mat, 1, funSPImat, sc = 6, start = c(2060, 1), #dates of object again
-#                         end = c(2099, 12)))
-#   
-#   # Convert back to raster brick
-#   spi <- setValues(cropstack, fitted.mat)
-#   dates <- as.yearmon(getZ(cropstack))
-#   names(spi) <- as.yearmon(dates)
-#   
-#   spi.stars<-st_as_stars(spi) #convert back to stars
-#   spi.stars1<-st_crop(spi.stars[,,,-c(1:240)],boundary) #crop to boundary
-#   spi.stars1 <- setNames(spi.stars1,"SPI-6")
-#   saveRDS(spi.stars1, file = paste0(data.dir,'SPI.monthly-',scens[i]))
-#   rm(spi.stars,spi.stars1,spi,cropstack,RF_stack)
-# }
+  file.list = list.files(path = paste0(Monthly_dir_RF,scens[1],"/"), pattern = '.tif', full.names = TRUE)
+  RF_stack<-stack(file.list) # Read in as stack - cldn't fig out how to do calc on stars obj.
+  # cropstack<- crop(RF_stack, boundary) #crop to boundary
+  cropstack<- crop(RF_stack, zones) #crop to zones
+  cropstack<-stack(cropstack)
+
+  dates<-as.Date(paste0(gsub("_","-",str_extract(file.list,"\\d{4}[_]\\d{2}")),"-01"),format="%Y-%m-%d")
+  cropstack <- setZ(cropstack, dates)
+  names(cropstack) <- as.yearmon(getZ(cropstack)) #zoo package
+
+  r.mat <- as.matrix(cropstack)
+
+  # Run spei()
+  funSPImat <- function(x, sc, start, end, na.rm=TRUE,...) {
+    dat <- ts(x, start = c(1990, 1), end = c(2009, 12), frequency = 12) #need to set dates of object. Could automate but not worth it now
+    as.numeric((spi(dat, sc, ref.start = start, ref.end = end, na.rm=na.rm, ...))$fitted)
+  }
+
+  fitted.mat <- t(apply(r.mat, 1, funSPImat, sc = 6, start = c(1990, 1), #dates of object again
+                        end = c(2009, 12)))
+
+  # Convert back to raster brick
+  spi <- setValues(cropstack, fitted.mat)
+  dates <- as.yearmon(getZ(cropstack))
+  names(spi) <- as.yearmon(dates)
+
+  spi.stars<-st_as_stars(spi) #convert back to stars
+  # spi.stars1<-st_crop(spi.stars,boundary) #crop to boundary
+  spi.stars1<-st_crop(spi.stars,zones) #crop to boundary
+  spi.stars1 <- setNames(spi.stars1,"SPI-6")
+  saveRDS(spi.stars1, file = paste0(data.dir,'SPI.monthly-',scens[1]))
+
+  h.cropstack <- cropstack
+
+  rm(spi.stars,spi.stars1,spi,cropstack,RF_stack)
+
+
+for (i in 2:length(scens)){
+  file.list = list.files(path = paste0(Monthly_dir_RF,scens[i],"/"), pattern = '.tif', full.names = TRUE)
+  RF_stack<-stack(file.list) # Read in as stack - cldn't fig out how to do calc on stars obj.
+  # cropstack<- crop(RF_stack, boundary) #crop to boundary
+  cropstack<- crop(RF_stack, zones) #crop to zones
+  cropstack<-stack(h.cropstack,cropstack)
+
+  h.dates <- as.Date(seq(as.Date("2060-01-01"), as.Date("2079-12-01"), by="months"))
+  dates<-as.Date(paste0(gsub("_","-",str_extract(file.list,"\\d{4}[_]\\d{2}")),"-01"),format="%Y-%m-%d")
+  dates<-c(h.dates,dates)
+  cropstack <- setZ(cropstack, dates)
+  names(cropstack) <- as.yearmon(getZ(cropstack)) #zoo package
+  r.mat <- as.matrix(cropstack)
+
+  # Run spei()
+  funSPImat <- function(x, sc, start, end, na.rm=TRUE,...) {
+    dat <- ts(x, start = c(2060, 1), end = c(2099, 12), frequency = 12) #need to set dates of object. Could automate but not worth it now
+    as.numeric((spi(dat, sc, ref.start = start, ref.end = c(2079,12), na.rm=na.rm, ...))$fitted)
+  }
+
+  fitted.mat <- t(apply(r.mat, 1, funSPImat, sc = 6, start = c(2060, 1), #dates of object again
+                        end = c(2099, 12)))
+
+  # Convert back to raster brick
+  spi <- setValues(cropstack, fitted.mat)
+  dates <- as.yearmon(getZ(cropstack))
+  names(spi) <- as.yearmon(dates)
+
+  spi.stars<-st_as_stars(spi) #convert back to stars
+  # spi.stars1<-st_crop(spi.stars[,,,-c(1:240)],boundary) #crop to boundary
+  spi.stars1<-st_crop(spi.stars[,,,-c(1:240)],zones) #crop to zones
+  spi.stars1 <- setNames(spi.stars1,"SPI-6")
+  saveRDS(spi.stars1, file = paste0(data.dir,'SPI.monthly-',scens[i]))
+  rm(spi.stars,spi.stars1,spi,cropstack,RF_stack)
+}
 
 ######################
 ## Average maps
-# 
-# present.spi <- readRDS(paste0(data.dir,'SPI.monthly-',scens[1])) 
-# present.spi <- setNames(present.spi,"SPI.6")
-# present.avg <-st_apply(present.spi, c("x", "y"), mean,na.rm=TRUE)
-# 
-# spi45 <- readRDS(paste0(data.dir,'SPI.monthly-',scens[2])) 
-# spi45 <- setNames(spi45,"SPI.6")
-# spi45.avg <-st_apply(spi45, c("x", "y"), mean,na.rm=TRUE)
-# 
-# spi85 <- readRDS(paste0(data.dir,'SPI.monthly-',scens[3])) 
-# spi85 <- setNames(spi85,"SPI.6")
-# spi85.avg <-st_apply(spi85, c("x", "y"), mean,na.rm=TRUE)
-# 
-# topo <- stack('./data/HALE/HALENatEa1.tif')
-# topo_df  <- as.data.frame(topo, xy = TRUE) 
-# 
-# scale.min = min(c(present.avg$mean, spi45.avg$mean, spi85.avg$mean),na.rm=TRUE)
-# scale.max = max(c(present.avg$mean, spi45.avg$mean, spi85.avg$mean),na.rm=TRUE)
-# 
-# map.plot <- function(data, title,xaxis,metric,col){
-#   ggplot() + 
-#     geom_raster(data = topo_df ,aes(x = x, y = y,alpha=HALENatEa1_1), show.legend=FALSE) +
-#     geom_stars(data = data, alpha = 0.8) + 
-#     geom_sf(data = boundary, aes(), fill = NA) +
-#     geom_sf(data = zones, aes(), fill = NA) +
-#     scale_fill_viridis(direction=-1, option = "turbo", limits = c(scale.min, scale.max),begin=.45,  
-#                        guide = guide_colorbar(title.position = "top", title.hjust = 0.5),oob = scales::squish) + #mako for WB delta
-#     labs(title = title) +
-#     theme_map() +
-#     theme(legend.position = "bottom",
-#           legend.key.width = unit(6, "cm"),
-#           legend.key.height = unit(.3, "cm"),
-#           legend.justification = "center",
-#           plot.title=element_text(size=12,face="bold",hjust=0.5),
-#           plot.background = element_rect(colour = col, fill=NA, linewidth = 5)) + 
-#     labs(fill = metric)
-# }
-# cfp <- map.plot(data=present.avg,title="Recent",metric="Average SPI-6",col="grey")
-# cf1 <- map.plot(data=spi45.avg,title="Climate Future 1",metric="Average SPI-6",col=cols[1])
-# cf2 <- map.plot(data=spi85.avg,title="Climate Future 2",metric="Average SPI-6",col=cols[2])
-# 
-# maps <- grid_arrange_shared_legend(cfp,cf1, cf2,ncol = 3, nrow = 1, position = "bottom", 
-#                                    top = textGrob(paste0("Average Standardized Precipitation Index"),
-#                                                   gp=gpar(fontface="bold", col="black", fontsize=16)))
-# ggsave("SPI-maps.png", plot=maps,width = 15, height = 9, path = plot.dir,bg="white")
-# 
-# df=data.frame()
-# for (i in 1:length(climate_zones)){
-# zone1 <- zones %>% filter(Short_Name == climate_zones[i])
-# 
-# present.spi.1 <- st_crop(present.spi, zone1)
-# present.spi.time <- st_apply((present.spi.1 %>% dplyr::select(SPI.6)), c("band"),mean,na.rm=TRUE, rename=FALSE)
-# df1 <- data.frame(present.spi.time)
-# df1$scen=scens[1]
-# df1$zone=climate_zones[i]
-# df <- rbind(df,df1)
-# 
-# spi45.1 <- st_crop(spi45, zone1)
-# spi45.time <- st_apply((spi45.1 %>% dplyr::select(SPI.6)), c("band"),mean,na.rm=TRUE, rename=FALSE)
-# df1 <- data.frame(spi45.time)
-# df1$scen=scens[2]
-# df1$zone=climate_zones[i]
-# df <- rbind(df,df1)
-# 
-# spi85.1 <- st_crop(spi85, zone1)
-# spi85.time <- st_apply((spi85.1 %>% dplyr::select(SPI.6)), c("band"),mean,na.rm=TRUE, rename=FALSE)
-# df1 <- data.frame(spi85.time)
-# df1$scen=scens[3]
-# df1$zone=climate_zones[i]
-# df <- rbind(df,df1)
-# 
-# }
-# 
-# write.csv(df,paste0(plot.dir,"SPI-by-zone.csv"),row.names = FALSE)
+
+present.spi <- readRDS(paste0(data.dir,'SPI.monthly-',scens[1]))
+present.spi <- setNames(present.spi,"SPI.6")
+present.avg <-st_apply(present.spi, c("x", "y"), mean,na.rm=TRUE)
+
+spi45 <- readRDS(paste0(data.dir,'SPI.monthly-',scens[2]))
+spi45 <- setNames(spi45,"SPI.6")
+spi45.avg <-st_apply(spi45, c("x", "y"), mean,na.rm=TRUE)
+
+spi85 <- readRDS(paste0(data.dir,'SPI.monthly-',scens[3]))
+spi85 <- setNames(spi85,"SPI.6")
+spi85.avg <-st_apply(spi85, c("x", "y"), mean,na.rm=TRUE)
+
+buffer <- st_buffer(zones[1], 5000) #create buffer around extraction file to set topo
+NaturEarth <- stack("C:/Users/arunyon/OneDrive - DOI/Documents/GIS/NE1_HR_LC_SR/NE1_HR_LC_SR.tif")
+topo <- crop(NaturEarth, buffer)
+
+# topo <- stack('./data/HALENatEa1.tif')
+topo_df  <- as.data.frame(topo, xy = TRUE)
+
+scale.min = min(c(present.avg$mean, spi45.avg$mean, spi85.avg$mean),na.rm=TRUE)
+scale.max = max(c(present.avg$mean, spi45.avg$mean, spi85.avg$mean),na.rm=TRUE)
+
+map.plot <- function(data, title,xaxis,metric,col){
+  ggplot() +
+    # geom_raster(data = topo_df ,aes(x = x, y = y,alpha=NE1_HR_LC_SR_1), show.legend=FALSE) +
+    geom_stars(data = data, alpha = 0.8) +
+    # geom_sf(data = boundary, aes(), fill = NA) +
+    geom_sf(data = zones, aes(), fill = NA) +
+    scale_fill_viridis(direction=-1, option = "turbo", limits = c(scale.min, scale.max),begin=.45,
+                       guide = guide_colorbar(title.position = "top", title.hjust = 0.5),oob = scales::squish) + #mako for WB delta
+    labs(title = title) +
+    theme_map() +
+    theme(legend.position = "bottom",
+          legend.key.width = unit(6, "cm"),
+          legend.key.height = unit(.3, "cm"),
+          legend.justification = "center",
+          plot.title=element_text(size=12,face="bold",hjust=0.5),
+          plot.background = element_rect(colour = col, fill=NA, linewidth = 5)) +
+    labs(fill = metric)
+}
+cfp <- map.plot(data=present.avg,title="Recent",metric="Average SPI-6",col="grey")
+cfp
+cf1 <- map.plot(data=spi45.avg,title="Climate Future 1",metric="Average SPI-6",col=cols[1])
+cf2 <- map.plot(data=spi85.avg,title="Climate Future 2",metric="Average SPI-6",col=cols[2])
+
+maps <- grid_arrange_shared_legend(cfp,cf1, cf2,ncol = 3, nrow = 1, position = "bottom",
+                                   top = textGrob(paste0("Average Standardized Precipitation Index"),
+                                                  gp=gpar(fontface="bold", col="black", fontsize=16)))
+ggsave("SPI-maps.png", plot=maps,width = 15, height = 9, path = plot.dir,bg="white")
+
+df=data.frame()
+for (i in 1:length(climate_zones)){
+zone1 <- zones %>% filter(Label == climate_zones[i])
+
+present.spi.1 <- st_crop(present.spi, zone1)
+present.spi.time <- st_apply((present.spi.1 %>% dplyr::select(SPI.6)), c("band"),mean,na.rm=TRUE, rename=FALSE)
+df1 <- data.frame(present.spi.time)
+df1$scen=scens[1]
+df1$zone=climate_zones[i]
+df <- rbind(df,df1)
+
+spi45.1 <- st_crop(spi45, zone1)
+spi45.time <- st_apply((spi45.1 %>% dplyr::select(SPI.6)), c("band"),mean,na.rm=TRUE, rename=FALSE)
+df1 <- data.frame(spi45.time)
+df1$scen=scens[2]
+df1$zone=climate_zones[i]
+df <- rbind(df,df1)
+
+spi85.1 <- st_crop(spi85, zone1)
+spi85.time <- st_apply((spi85.1 %>% dplyr::select(SPI.6)), c("band"),mean,na.rm=TRUE, rename=FALSE)
+df1 <- data.frame(spi85.time)
+df1$scen=scens[3]
+df1$zone=climate_zones[i]
+df <- rbind(df,df1)
+
+}
+
+write.csv(df,paste0(plot.dir,"SPI-by-zone.csv"),row.names = FALSE)
 
 PlotTheme = theme(axis.text=element_text(size=14),    #Text size for axis tick mark labels
                   axis.title.x=element_blank(),               #Text size and alignment for x-axis label
